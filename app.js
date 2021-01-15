@@ -6,6 +6,8 @@ const https = require("https");
 const nodemailer = require("nodemailer");
 // Config file for confidential information.
 const config = require('./config');
+// Creating file location paths.
+const path = require('path');
 
 // Variable for the web server application.
 const app = express();
@@ -13,13 +15,13 @@ const app = express();
 const port = config.port;
 
 // So we can use static (local) css/js/image files.
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, 'public')));
 // Pulling data from html body.
 app.use(express.urlencoded());
 
 app.get("/", (req, res) => {
   // Loads Signup page when user enters url.
-  res.sendFile(__dirname + "/signup.html");
+  res.sendFile(path.join(__dirname, 'views', 'signup.html'));
 });
 
 app.post("/", (req, res) => {
@@ -51,10 +53,10 @@ app.post("/", (req, res) => {
   const request = https.request(url, options, (response) => {
     if (response.statusCode === 200) {
       // Sends to success page if no error and data has been sent correctly.
-      res.sendFile(__dirname + "/success.html");
+      res.sendFile(path.join(__dirname, 'views', 'success.html'));
     } else {
       // Sends to failure page if any errors.
-      res.sendFile(__dirname + "/failure.html");
+      res.sendFile(path.join(__dirname, 'views', 'failure.html'));
     };
     
     response.on("data", (data) => {
@@ -76,7 +78,7 @@ app.post("/failure", (req, res) => {
 });
 
 app.get("/contact", (req, res) => {
-  res.sendFile(__dirname + "/contact.html");
+  res.sendFile(path.join(__dirname, 'views', 'contact.html'));
 });
 
 app.post("/contact", (req, res) => {
