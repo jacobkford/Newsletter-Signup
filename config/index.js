@@ -3,6 +3,7 @@ require("dotenv").config();
 
 // Exports data to be used in other files in the server.
 module.exports = {
+  
   // Server port.  
   port: parseInt(process.env.PORT),
     
