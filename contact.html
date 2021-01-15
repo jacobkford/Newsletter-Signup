@@ -17,28 +17,32 @@
             <header class="mb-auto">
                 <div>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link active" href="/">Home</a>
-                    <a class="nav-link" href="/contact">Contact</a>
+                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link active" href="/contact">Contact</a>
                 </nav>
                 </div>
             </header>
 
 
-        <main class="form-signin w-100 h-50 p-6 mx-auto text-center">
-            <form action="/" method="POST">
+        <main class="form-signin w-100 h-75 p-6 mx-auto text-center">
+            <form action="/contact" method="POST">
                 <img class="mb-4" src="images/neews-logo.png" alt="" width="120" height="120">
-                <h1 class="h3 mb-3 fw-normal">Sign-up to My NewsLetter</h1>
+                <h1 class="h3 mb-3 fw-normal">Contact Us!</h1>
 
-                <input name="firstName" type="text" class="form-control top" placeholder="First Name" required autofocus>
-                <input name="lastName" type="text" class="form-control middle" placeholder="Last Name" required>
-                <input name="email" type="email" class="form-control bottom" placeholder="Email address" required>
+                <input name="name" type="text" class="form-control top" placeholder="Name" required autofocus>
+                <input name="email" type="email" class="form-control middle" placeholder="Email address" required>
+                <input name="subject" type="text" class="form-control middle" placeholder="Subject" required>
+                <textarea name="message" class="form-control bottom" rows="10" placeholder="Message..." required></textarea>
 
-                <button class="w-100 btn btn-lg btn-primary" type="submit">Sign Up</button>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Send</button>
+                
             </form>
-        </main>
+        </main>     
         
         <footer class="w-100 h-0 p-3 mx-auto flex-column text-center">
             <p class="mt-5 mb-3 text-muted">&copy; Neews</p>
         </footer>
+
+        <script src="/js/index.js"></script>
     </body>
 </html>

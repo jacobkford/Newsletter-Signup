@@ -5,19 +5,18 @@ require("dotenv").config();
 const express = require("express");
 // Enables ability to receive & send data to other APIs.
 const https = require("https");
-// Used for parsing through html files to pull user inputted data.
-const bodyParser = require("body-parser");
-const { urlencoded } = require("body-parser");
+// Used for sending users contact form data to the host/admins email address.
+const nodemailer = require("nodemailer");
 
 // Variable for the web server application.
 const app = express();
 // Local host port number.
 const port = process.env.PORT;
 
-// So we can use static (local) css/javascript/image files.
+// So we can use static (local) css/js/image files.
 app.use(express.static("public"));
 // Pulling data from html body.
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded());
 
 app.get("/", (req, res) => {
   // Loads Signup page when user enters url.
@@ -25,40 +24,29 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", (req, res) => {
-  // Creating variables for the users data.
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const email = req.body.email;
-
   // Inputting & formatting the users data to json for the mailchimp api post request.
-  const data = {
+  let data = {
     members: [
       {
-        email_address: email,
+        email_address: req.body.email,
         status: "subscribed",
         merge_fields: {
-          FNAME: firstName,
-          LNAME: lastName,
-        }
-      }
-    ]
+          FNAME: req.body.firstName,
+          LNAME: req.body.lastName,
+        },
+      },
+    ],
   };
-  
+
   // Converting the users json data to a string to lower file size when being sent.
-  const jsonData = JSON.stringify(data);
-  // Listing ID.
-  const listID = process.env.LIST_ID;
-  // Mailchimp server ID for the listing address.
-  const serverID = process.env.SERVER_ID;
+  let jsonData = JSON.stringify(data);
   // The mailing list id URL.
-  const url = `https://${serverID}.api.mailchimp.com/3.0/lists/${listID}`;
+  let url = `https://${process.env.SERVER_ID}.api.mailchimp.com/3.0/lists/${process.env.LIST_ID}`;
   /* Setting the request options to send data to the mailing list. 
   *  Which will be a post request & will include admin username & api key. */
-  const apiUser = process.env.API_USER;
-  const apiKey = process.env.API_KEY;
-  const options = {
+  let options = {
     method: "POST",
-    auth: `${apiUser}:${apiKey}`
+    auth: `${process.env.API_USER}:${process.env.API_KEY}`,
   };
   // Post request to the mailchimp listing database.
   const request = https.request(url, options, (response) => {
@@ -86,6 +74,46 @@ app.post("/", (req, res) => {
 app.post("/failure", (req, res) => {
   // Redirects user back to sign-up page if they click the 'Try Again' button.
   res.redirect("/");
+});
+
+app.get("/contact", (req, res) => {
+  res.sendFile(__dirname + "/contact.html");
+});
+
+app.post("/contact", (req, res) => {
+  // Creating the mailing address for the contact from.
+  let transporter = nodemailer.createTransport({
+    service: process.env.EMAIL_SERVICE, // Visit https://nodemailer.com/smtp/well-known/ for list of services.
+    tls: {
+      // tls options added to fix a bug where the mails wouldn't send.
+      rejectUnauthorized: false,
+      strictSSL: false,
+    },
+    auth: {
+      user: process.env.EMAIL_ADDRESS,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+  // Inputting & formatting the form data into an email format.
+  let mailOptions = {
+    from: req.body.email,
+    to: process.env.EMAIL_ADDRESS,
+    subject: `Message from ${req.body.email}: ${req.body.subject}`,
+    text: req.body.message
+  };
+  // If successful sends the mail, if not returns an error message.
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("Error");
+    }
+    else {
+      console.log('Email sent: ' + info.response);
+      res.send("Success");
+    }
+  });
+
+  console.log(req.body);
 });
 
 app.listen(port, () => {
