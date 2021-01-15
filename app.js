@@ -1,17 +1,16 @@
-// Import data from .env file, which stores private data (e.g. API keys).
-require("dotenv").config();
-
 // Enables the express web framework
 const express = require("express");
 // Enables ability to receive & send data to other APIs.
 const https = require("https");
 // Used for sending users contact form data to the host/admins email address.
 const nodemailer = require("nodemailer");
+// Config file for confidential information.
+const config = require('./config');
 
 // Variable for the web server application.
 const app = express();
 // Local host port number.
-const port = process.env.PORT;
+const port = config.port;
 
 // So we can use static (local) css/js/image files.
 app.use(express.static("public"));
@@ -41,12 +40,12 @@ app.post("/", (req, res) => {
   // Converting the users json data to a string to lower file size when being sent.
   let jsonData = JSON.stringify(data);
   // The mailing list id URL.
-  let url = `https://${process.env.SERVER_ID}.api.mailchimp.com/3.0/lists/${process.env.LIST_ID}`;
+  let url = `https://${config.mailchimp.server}.api.mailchimp.com/3.0/lists/${config.mailchimp.list}`;
   /* Setting the request options to send data to the mailing list. 
   *  Which will be a post request & will include admin username & api key. */
   let options = {
     method: "POST",
-    auth: `${process.env.API_USER}:${process.env.API_KEY}`,
+    auth: `${config.mailchimp.user}:${config.mailchimp.key}`,
   };
   // Post request to the mailchimp listing database.
   const request = https.request(url, options, (response) => {
@@ -83,23 +82,23 @@ app.get("/contact", (req, res) => {
 app.post("/contact", (req, res) => {
   // Creating the mailing address for the contact from.
   let transporter = nodemailer.createTransport({
-    service: process.env.EMAIL_SERVICE, // Visit https://nodemailer.com/smtp/well-known/ for list of services.
+    service: config.email.service, // Visit https://nodemailer.com/smtp/well-known/ for list of services.
     tls: {
       // tls options added to fix a bug where the mails wouldn't send.
       rejectUnauthorized: false,
       strictSSL: false,
     },
     auth: {
-      user: process.env.EMAIL_ADDRESS,
-      pass: process.env.EMAIL_PASSWORD,
+      user: config.email.user,
+      pass: config.email.pass,
     },
   });
   // Inputting & formatting the form data into an email format.
   let mailOptions = {
     from: req.body.email,
-    to: process.env.EMAIL_ADDRESS,
+    to: config.email.user,
     subject: `Message from ${req.body.email}: ${req.body.subject}`,
-    text: req.body.message
+    text: req.body.message,
   };
   // If successful sends the mail, if not returns an error message.
   transporter.sendMail(mailOptions, (err, info) => {
