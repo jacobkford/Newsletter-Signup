@@ -12,7 +12,7 @@ const path = require('path');
 // Variable for the web server application.
 const app = express();
 // Local host port number.
-const port = config.port;
+const port = config.port || 3000;
 
 // So we can use static (local) css/js/image files.
 app.use(express.static(path.join(__dirname, 'public')));
