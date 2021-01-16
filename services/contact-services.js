@@ -4,7 +4,7 @@ const path = require("path");
 
 module.exports = {
     contactGet: (req, res) => {
-        res.sendFile(path.resolve("./views/contact.html"));
+      res.sendFile(path.normalize(__dirname + "/../views/contact.html"));
     },
 
     contactPost: (req, res) => {

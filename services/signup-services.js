@@ -4,7 +4,7 @@ const path = require("path");
 
 module.exports = {
     signupGet: (req, res) => {
-        res.sendFile(path.resolve("./views/signup.html"));
+        res.sendFile(path.normalize(__dirname + "/../views/signup.html"));
     },
 
     signupPost: (req, res) => {
@@ -36,10 +36,11 @@ module.exports = {
         const request = https.request(url, options, (response) => {
             if (response.statusCode === 200) {
                 // Sends to success page if no error and data has been sent correctly.
-                res.sendFile(path.resolve("./views/success.html"));
+                //res.sendFile(path.resolve("./views/success.html"));
+                res.sendFile(path.normalize(__dirname + "/../views/success.html"));
             } else {
                 // Sends to failure page if any errors.
-                res.sendFile(path.resolve("./views/failure.html"));
+                res.sendFile(path.normalize(__dirname + "/../views/failure.html"));
             };
       
             response.on("data", (data) => {

@@ -7,7 +7,7 @@
     "dev": "nodemon app.js",
     "start": "node app.js"
   },
-  "author": "Jacob Ford",
+  "author": "Jay",
   "license": "ISC",
   "dependencies": {
     "compression": "^1.7.4",

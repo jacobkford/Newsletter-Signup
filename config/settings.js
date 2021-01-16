@@ -27,5 +27,5 @@ module.exports = {
     user: process.env.EMAIL_ADDRESS,
     // The email password.
     pass: process.env.EMAIL_PASSWORD,
-  },
+  }
 };
