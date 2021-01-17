@@ -5,7 +5,7 @@ const path = require("path");
 // Variable for the web server application.
 const app = require('express')();
 // Local host port number.
-const port = config.port || 3000;
+const port = config.server.port || 3000;
 
 // Sets up server configs.
 require(path.resolve(__dirname + '/config/server'))(app);
