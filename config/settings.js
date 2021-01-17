@@ -31,14 +31,17 @@ module.exports = {
   },
 
   sql: {
+    // MySQL connection username.
     user: process.env.SQL_USER,
-
+    // MySQL connection password.
     pass: process.env.SQL_PASS,
-
+    // MySQL host address.
     host: process.env.SQL_HOST,
-
+    // MySQL host port.
+    port: parseInt(process.env.SQL_PORT),
+    // MySQL project database name.
     database: process.env.SQL_DB,
-
+    // Users database table.
     users_table: process.env.SQL_TABLE_USERS,
   },
 };

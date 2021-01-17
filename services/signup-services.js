@@ -1,6 +1,8 @@
 // Enables ability to receive & send data to other APIs.
 const https = require("https");
 const path = require("path");
+const User = require("../models/users.model");
+const config = require("../config/settings");
 
 module.exports = {
     signupGet: (req, res) => {
@@ -21,6 +23,22 @@ module.exports = {
                 },
             ],
         };
+
+        let user = new User({
+            email: req.body.email,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            status: "subscribed",
+        });
+
+        User.create(user, (err, data) => {
+            if (err) {
+                res.status(500).send("Some error occurred while creating the user.")
+            }
+            else {
+                res.send(data);
+            };
+        });
 
         // Converting the users json data to a string to lower file size when being sent.
         let jsonData = JSON.stringify(data);
