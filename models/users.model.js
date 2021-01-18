@@ -1,9 +1,17 @@
 const database = require('./database');
 
+database.connect((err) => {
+  if (err) {
+    console.log(err.message);
+  }
+  console.log(`[ DATABASE]: ${database.state}`);
+
+});
+
 const User = function(user) {
     this.email = user.email;
-    this.firstName = user.firstName;
-    this.lastName = user.lastName;
+    this.first_name = user.firstName;
+    this.last_name = user.lastName;
     this.status = user.status;
 };
 

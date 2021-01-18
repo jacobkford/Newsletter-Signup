@@ -31,15 +31,6 @@ module.exports = {
             status: "subscribed",
         });
 
-        User.create(user, (err, data) => {
-            if (err) {
-                res.status(500).send("Some error occurred while creating the user.")
-            }
-            else {
-                res.send(data);
-            };
-        });
-
         // Converting the users json data to a string to lower file size when being sent.
         let jsonData = JSON.stringify(data);
         // The mailing list id URL.
@@ -67,6 +58,15 @@ module.exports = {
                 console.log(JSON.parse(data));
             });
         });
+
+        User.create(user, (err, data) => {
+          if (err) {
+            res
+              .status(500)
+              .send("Some error occurred while creating the user.");
+          } 
+        });
+
         /* Sends and writes the mailchimp data to the mailing list and 
         * returns the user either the 'Success' or 'Failure' page. */
         request.write(jsonData);

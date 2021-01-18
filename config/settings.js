@@ -1,6 +1,3 @@
-// Import data from .env file, which stores private data (e.g. API keys).
-require("dotenv").config();
-
 // Exports data to be used in other files in the server.
 module.exports = {
   server: {

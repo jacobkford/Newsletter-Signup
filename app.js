@@ -1,3 +1,5 @@
+// Import data from .env file, which stores private data (e.g. API keys).
+require("dotenv").config();
 // Config file for confidential information.
 const config = require("./config/settings");
 const path = require("path");
